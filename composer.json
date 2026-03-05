@@ -1,5 +1,5 @@
 {
-    "name": "tobscure/json-api",
+    "name": "intelisys/json-api",
     "description": "JSON-API responses in PHP",
     "keywords": ["json", "api", "standard", "jsonapi"],
     "license": "MIT",
@@ -11,6 +11,9 @@
     ],
     "require": {
         "php": "^5.5.9 || ^7.0"
+    },
+    "replace": {
+        "tobscure/json-api":"0.3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^4.8 || ^5.0"
