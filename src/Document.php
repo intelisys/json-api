@@ -25,33 +25,33 @@ class Document implements JsonSerializable
      *
      * @var array
      */
-    protected $included = [];
+    protected array $included = [];
 
     /**
      * The errors array.
      *
      * @var array
      */
-    protected $errors;
+    protected array $errors;
 
     /**
      * The jsonapi array.
      *
      * @var array
      */
-    protected $jsonapi;
+    protected array $jsonapi;
 
     /**
      * The data object.
      *
-     * @var ElementInterface
+     * @var null|ElementInterface
      */
-    protected $data;
+    protected ?ElementInterface $data;
 
     /**
-     * @param ElementInterface $data
+     * @param ElementInterface|null $data
      */
-    public function __construct(ElementInterface $data = null)
+    public function __construct(?ElementInterface $data)
     {
         $this->data = $data;
     }
@@ -59,12 +59,12 @@ class Document implements JsonSerializable
     /**
      * Get included resources.
      *
-     * @param \Tobscure\JsonApi\ElementInterface $element
+     * @param ElementInterface $element
      * @param bool $includeParent
      *
-     * @return \Tobscure\JsonApi\Resource[]
+     * @return Resource[]
      */
-    protected function getIncluded(ElementInterface $element, $includeParent = false)
+    protected function getIncluded(ElementInterface $element, bool $includeParent = false): array
     {
         $included = [];
 
@@ -83,7 +83,7 @@ class Document implements JsonSerializable
             foreach ($resource->getUnfilteredRelationships() as $relationship) {
                 $includedElement = $relationship->getData();
 
-                if (! $includedElement instanceof ElementInterface) {
+                if (!$includedElement instanceof ElementInterface) {
                     continue;
                 }
 
@@ -91,7 +91,7 @@ class Document implements JsonSerializable
                     // If this resource is the same as the top-level "data"
                     // resource, then we don't want it to show up again in the
                     // "included" array.
-                    if (! $includeParent && $child->getType() === $type && $child->getId() === $id) {
+                    if (!$includeParent && $child->getType() === $type && $child->getId() === $id) {
                         continue;
                     }
 
@@ -110,12 +110,12 @@ class Document implements JsonSerializable
     }
 
     /**
-     * @param \Tobscure\JsonApi\Resource[] $resources
-     * @param \Tobscure\JsonApi\Resource $newResource
+     * @param Resource[] $resources
+     * @param Resource $newResource
      *
-     * @return \Tobscure\JsonApi\Resource[]
+     * @return Resource[]
      */
-    protected function mergeResource(array $resources, Resource $newResource)
+    protected function mergeResource(array $resources, Resource $newResource): array
     {
         $type = $newResource->getType();
         $id = $newResource->getId();
@@ -132,11 +132,11 @@ class Document implements JsonSerializable
     /**
      * Set the data object.
      *
-     * @param \Tobscure\JsonApi\ElementInterface $element
+     * @param ElementInterface $element
      *
      * @return $this
      */
-    public function setData(ElementInterface $element)
+    public function setData(ElementInterface $element): Document
     {
         $this->data = $element;
 
@@ -150,7 +150,7 @@ class Document implements JsonSerializable
      *
      * @return $this
      */
-    public function setErrors($errors)
+    public function setErrors($errors): Document
     {
         $this->errors = $errors;
 
@@ -164,7 +164,7 @@ class Document implements JsonSerializable
      *
      * @return $this
      */
-    public function setJsonapi($jsonapi)
+    public function setJsonapi(array $jsonapi): Document
     {
         $this->jsonapi = $jsonapi;
 
@@ -176,15 +176,15 @@ class Document implements JsonSerializable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $document = [];
 
-        if (! empty($this->links)) {
+        if (!empty($this->links)) {
             $document['links'] = $this->links;
         }
 
-        if (! empty($this->data)) {
+        if (!empty($this->data)) {
             $document['data'] = $this->data->toArray();
 
             $resources = $this->getIncluded($this->data);
@@ -196,15 +196,15 @@ class Document implements JsonSerializable
             }
         }
 
-        if (! empty($this->meta)) {
+        if (!empty($this->meta)) {
             $document['meta'] = $this->meta;
         }
 
-        if (! empty($this->errors)) {
+        if (!empty($this->errors)) {
             $document['errors'] = $this->errors;
         }
 
-        if (! empty($this->jsonapi)) {
+        if (!empty($this->jsonapi)) {
             $document['jsonapi'] = $this->jsonapi;
         }
 
@@ -216,7 +216,7 @@ class Document implements JsonSerializable
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return json_encode($this->toArray());
     }
@@ -226,7 +226,7 @@ class Document implements JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
