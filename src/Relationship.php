@@ -21,14 +21,14 @@ class Relationship
      *
      * @var \Tobscure\JsonApi\ElementInterface|null
      */
-    protected $data;
+    protected ?ElementInterface $data;
 
     /**
      * Create a new relationship.
      *
      * @param \Tobscure\JsonApi\ElementInterface|null $data
      */
-    public function __construct(ElementInterface $data = null)
+    public function __construct(?ElementInterface $data)
     {
         $this->data = $data;
     }
@@ -38,7 +38,7 @@ class Relationship
      *
      * @return \Tobscure\JsonApi\ElementInterface|null
      */
-    public function getData()
+    public function getData(): ?ElementInterface
     {
         return $this->data;
     }
@@ -50,7 +50,7 @@ class Relationship
      *
      * @return $this
      */
-    public function setData($data)
+    public function setData(?ElementInterface $data): self
     {
         $this->data = $data;
 
@@ -62,7 +62,7 @@ class Relationship
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $array = [];
 
